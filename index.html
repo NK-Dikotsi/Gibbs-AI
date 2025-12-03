@@ -1223,11 +1223,7 @@
         // ============================================
         // CONFIGURATION
         // ============================================
-        const GROQ_API_KEYS = [
-            process.env.GROQ_API1,
-            process.env.GROQ_API2,
-            process.env.GROQ_API3
-        ].filter(key => key); // Filter out any undefined keys
+        const NUM_API_KEYS = 3;
         let currentApiKeyIndex = 0;
        
         // AI Model Configuration
@@ -1495,6 +1491,40 @@
             resetSession();
         }
         // ============================================
+        // API PROXY HELPER
+        // ============================================
+        async function groqApiCall(body) {
+            let retries = 0;
+            while (retries < NUM_API_KEYS) {
+                try {
+                    const response = await fetch(`/api/groq?keyIndex=${currentApiKeyIndex}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    });
+
+                    if (response.ok) {
+                        return await response.json();
+                    } else if (response.status === 429 || response.status === 401) {
+                        currentApiKeyIndex = (currentApiKeyIndex + 1) % NUM_API_KEYS;
+                        retries++;
+                        continue;
+                    } else {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                } catch (e) {
+                    currentApiKeyIndex = (currentApiKeyIndex + 1) % NUM_API_KEYS;
+                    retries++;
+                    if (retries >= NUM_API_KEYS) {
+                        throw e;
+                    }
+                }
+            }
+            throw new Error('Max retries exceeded for API keys');
+        }
+        // ============================================
         // FILE UPLOAD & PDF PROCESSING
         // ============================================
         async function handleFileUpload(event) {
@@ -1614,8 +1644,6 @@
             });
         }
         async function analyzeCVWithAI(cvText) {
-            const apiKey = GROQ_API_KEYS[currentApiKeyIndex];
-           
             // Create a complete, well-structured prompt
             const context = `You are analyzing a CV for GIBS program recommendations.
 CRITICAL FORMATTING INSTRUCTIONS:
@@ -1660,46 +1688,34 @@ Why it could work:
 Next steps:
 Based on your background, I'd recommend [specific program]. Would you like me to tell you more about the admission requirements or help you explore other options?`;
             try {
-                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'openai/gpt-oss-120b',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: context
-                            },
-                            {
-                                role: 'user',
-                                content: 'Please analyze this CV and provide GIBS program recommendations in a complete, well-structured response.'
-                            }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1200,
-                        top_p: 0.95
-                    })
+                const data = await groqApiCall({
+                    model: 'openai/gpt-oss-120b',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: context
+                        },
+                        {
+                            role: 'user',
+                            content: 'Please analyze this CV and provide GIBS program recommendations in a complete, well-structured response.'
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 1200,
+                    top_p: 0.95
                 });
-                if (response.ok) {
-                    const data = await response.json();
-                    let responseText = data.choices[0].message.content;
-                   
-                    // Clean up the response - remove asterisks and ensure complete sentences
-                    responseText = responseText.replace(/\*\*/g, '');
-                    responseText = responseText.replace(/\*/g, '');
-                   
-                    // Ensure response ends with proper punctuation
-                    if (!responseText.match(/[.!?]$/)) {
-                        responseText += '.';
-                    }
-                   
-                    return responseText;
-                } else {
-                    throw new Error('API error');
+                let responseText = data.choices[0].message.content;
+               
+                // Clean up the response - remove asterisks and ensure complete sentences
+                responseText = responseText.replace(/\*\*/g, '');
+                responseText = responseText.replace(/\*/g, '');
+               
+                // Ensure response ends with proper punctuation
+                if (!responseText.match(/[.!?]$/)) {
+                    responseText += '.';
                 }
+               
+                return responseText;
             } catch (error) {
                 console.error('CV analysis error:', error);
                 return "Thanks for uploading your CV! I can see you have relevant experience. Could you tell me more about your career goals and background so I can suggest the best GIBS programs for you?";
@@ -1951,72 +1967,47 @@ The program requires a degree and 2 years of experience, which you seem to have 
             return context;
         }
         async function callAIAPI(userMessage, context, modelType = 'GENERAL') {
-            const apiKey = GROQ_API_KEYS[currentApiKeyIndex];
             let modelConfig = AI_MODELS[modelType] || AI_MODELS.GENERAL;
             let modelToUse = modelConfig.primary;
            
             try {
-                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: modelToUse,
-                        messages: [
-                            {
-                                role: 'system',
-                                content: context
-                            },
-                            {
-                                role: 'user',
-                                content: userMessage
-                            }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 1200, // Increased for complete responses
-                        top_p: 0.95
-                    })
+                const data = await groqApiCall({
+                    model: modelToUse,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: context
+                        },
+                        {
+                            role: 'user',
+                            content: userMessage
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 1200,
+                    top_p: 0.95
                 });
-               
-                if (response.ok) {
-                    const data = await response.json();
-                    return data.choices[0].message.content;
-                } else {
-                    throw new Error(`API error: ${response.status}`);
-                }
+                return data.choices[0].message.content;
             } catch (error) {
                 // Try fallback models
                 for (let fallbackModel of modelConfig.fallbacks) {
                     try {
-                        const fallbackResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${apiKey}`
-                            },
-                            body: JSON.stringify({
-                                model: fallbackModel,
-                                messages: [
-                                    {
-                                        role: 'system',
-                                        content: context
-                                    },
-                                    {
-                                        role: 'user',
-                                        content: userMessage
-                                    }
-                                ],
-                                temperature: 0.7,
-                                max_tokens: 1000
-                            })
+                        const data = await groqApiCall({
+                            model: fallbackModel,
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: context
+                                },
+                                {
+                                    role: 'user',
+                                    content: userMessage
+                                }
+                            ],
+                            temperature: 0.7,
+                            max_tokens: 1000
                         });
-                       
-                        if (fallbackResponse.ok) {
-                            const data = await fallbackResponse.json();
-                            return data.choices[0].message.content;
-                        }
+                        return data.choices[0].message.content;
                     } catch (e) {
                         continue;
                     }
