@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +25,9 @@
             background-color: white;
             color: #333;
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         /* Header and Navigation Styles */
         header {
@@ -48,6 +50,7 @@
         .logo-container {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
         .logo {
             height: 40px;
@@ -56,6 +59,20 @@
             transition: transform 0.3s ease;
         }
         .logo:hover {
+            transform: scale(1.05);
+        }
+        /* Logo separator line */
+        .logo-separator {
+            width: 1px;
+            height: 30px;
+            background-color: #ddd;
+        }
+        .logo-gla {
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        .logo-gla:hover {
             transform: scale(1.05);
         }
         /* Navigation Styles - Centered */
@@ -199,6 +216,7 @@
             text-align: center;
             background-color: white;
             position: relative;
+            flex: 1;
         }
         .content-section h1 {
             font-size: 2.2rem;
@@ -259,17 +277,59 @@
             position: relative;
             z-index: 2;
         }
-        /* Footer Styles */
+        /* Footer Styles - UPDATED */
         footer {
             background-color: #f8f9fa;
-            padding: 25px 0;
+            padding: 0;
             text-align: center;
-            margin-top: 0;
+            margin-top: auto;
             border-top: 1px solid #eaeaea;
+            position: relative;
+        }
+        .footer-top {
+            padding: 30px 20px;
+            border-bottom: 1px solid #eaeaea;
+            background-color: #f8f9fa;
+            text-align: left;
+        }
+        .footer-logos {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 15px;
+        }
+        .footer-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .footer-logo {
+            height: 35px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        .footer-logo:hover {
+            transform: scale(1.05);
+        }
+        .footer-logo-gla {
+            height: 35px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        .footer-logo-gla:hover {
+            transform: scale(1.05);
+        }
+        .footer-content {
+            padding: 30px 20px;
         }
         footer p {
             color: #666;
             font-size: 13px;
+            margin: 5px 0;
+        }
+        .footer-text {
+            max-width: 800px;
+            margin: 0 auto;
         }
         /* Cookie Consent Banner */
         .cookie-consent {
@@ -644,10 +704,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        .session-info span {
-            font-weight: 600;
-            color: #20409a;
-        }
         .session-timer {
             font-size: 10px;
             color: #ff4444;
@@ -662,6 +718,15 @@
             }
             .logo {
                 height: 35px;
+            }
+            .logo-gla {
+                height: 35px;
+            }
+            .logo-separator {
+                height: 25px;
+            }
+            .logo-container {
+                gap: 10px;
             }
             .hamburger {
                 display: flex;
@@ -743,6 +808,22 @@
             .gradient-corner-left {
                 width: 200px;
                 height: 200px;
+            }
+            /* Footer responsive styles */
+            .footer-top {
+                padding: 20px 15px;
+            }
+            .footer-logos {
+                justify-content: flex-start;
+            }
+            .footer-logo {
+                height: 30px;
+            }
+            .footer-logo-gla {
+                height: 30px;
+            }
+            .footer-content {
+                padding: 20px 15px;
             }
             .cookie-consent {
                 padding: 15px;
@@ -837,6 +918,15 @@
             .logo {
                 height: 30px;
             }
+            .logo-gla {
+                height: 30px;
+            }
+            .logo-separator {
+                height: 20px;
+            }
+            .logo-container {
+                gap: 8px;
+            }
             .nav-menu {
                 top: 0;
                 height: 100vh;
@@ -871,6 +961,22 @@
             .gradient-corner-left {
                 width: 150px;
                 height: 150px;
+            }
+            /* Footer small screen styles */
+            .footer-top {
+                padding: 15px 10px;
+            }
+            .footer-logo {
+                height: 25px;
+            }
+            .footer-logo-gla {
+                height: 25px;
+            }
+            .footer-content {
+                padding: 15px 10px;
+            }
+            footer p {
+                font-size: 12px;
             }
             .cookie-buttons {
                 flex-direction: column;
@@ -1086,10 +1192,16 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <!-- Logo -->
+                <!-- Logo Container with both logos -->
                 <div class="logo-container">
                     <a href="#">
                         <img src="logo2.png" alt="GIBS AI PathFinder Logo" class="logo">
+                    </a>
+                    <!-- Minimal horizontal line separator -->
+                    <div class="logo-separator"></div>
+                    <!-- Second company logo -->
+                    <a href="#">
+                        <img src="logoGLA.png" alt="GLA Logo" class="logo-gla">
                     </a>
                 </div>
                 <!-- Navigation - Centered -->
@@ -1148,8 +1260,27 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2025 GIBS AI PathFinder. All rights reserved.</p>
-            <p>Gordon Institute of Business Science, University of Pretoria</p>
+            <!-- Footer Top Section with Logos -->
+            <div class="footer-top">
+                <div class="footer-logos">
+                    <div class="footer-logo-container">
+                        <a href="#">
+                            <img src="logo2footer.png" alt="GIBS AI PathFinder Logo" class="footer-logo">
+                        </a>
+                        <!-- Second company logo -->
+                        <a href="#">
+                            <img src="logoGLA.png" alt="GLA Logo" class="footer-logo-gla">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer Content Section (starts below the logos) -->
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>GRITLab Africa&copy; 2025 GIBS AI PathFinder. All rights reserved.</p>
+                    <p>Gordon Institute of Business Science, University of Pretoria</p>
+                </div>
+            </div>
         </div>
     </footer>
     <!-- Cookie Consent Banner -->
@@ -1318,49 +1449,49 @@
                         "name": "Programme for Management Development (PMD)",
                         "duration": "10 months",
                         "level": "NQF 7",
-                        "cost": "R 98,293",
-                        "requirements": "Matric certificate, 5-10 years work experience",
-                        "description": "Foundation program for experienced managers without formal business education"
+                        "cost": "R 98,293 (South African Rand)",
+                        "requirements": "Matric certificate, 5-10 years work experience in South African context",
+                        "description": "Foundation program for experienced managers without formal business education, focused on South African business environment"
                     },
                     {
                         "name": "Advanced Diploma in General Management",
                         "duration": "10 months",
                         "level": "NQF 8",
-                        "cost": "R 113,715",
+                        "cost": "R 113,715 (South African Rand)",
                         "requirements": "Degree (NQF 7), 2 years work experience",
-                        "description": "For graduates seeking management skills development"
+                        "description": "For graduates seeking management skills development in South African context"
                     },
                     {
                         "name": "Postgraduate Diploma in Business Administration (PDBA)",
                         "duration": "10-11 months",
                         "level": "NQF 8",
-                        "cost": "R 150,777",
+                        "cost": "R 150,777 (South African Rand)",
                         "requirements": "Degree/Honours (NQF 7), 5 years work experience, 2 years managerial",
-                        "description": "Comprehensive business education for career advancement"
+                        "description": "Comprehensive business education for career advancement in South Africa"
                     },
                     {
                         "name": "Master of Business Administration (MBA)",
                         "duration": "Various formats (1-2 years)",
                         "level": "NQF 9",
-                        "cost": "R 240,278 - R 334,223",
+                        "cost": "R 240,278 - R 334,223 (South African Rand)",
                         "requirements": "Honours/Post Grad (NQF 8), 5 years work experience",
-                        "description": "Flagship program for executive leadership development"
+                        "description": "Flagship program for executive leadership development in African context"
                     },
                     {
                         "name": "MPhil (Corporate Strategy/Change Leadership)",
                         "duration": "18 months",
                         "level": "NQF 9",
-                        "cost": "R 240,278",
+                        "cost": "R 240,278 (South African Rand)",
                         "requirements": "Master's degree, 20 page research proposal, 5 years work experience",
-                        "description": "Research-focused program for specialized consulting or academia"
+                        "description": "Research-focused program for specialized consulting or academia in South Africa"
                     }
                 ],
                 "key_focus_areas": [
                     "African business leadership",
-                    "Entrepreneurship and innovation",
-                    "Ethical leadership",
-                    "Sustainable business practices",
-                    "Digital transformation"
+                    "South African entrepreneurship and innovation",
+                    "Ethical leadership in South African context",
+                    "Sustainable business practices for South Africa",
+                    "Digital transformation in African businesses"
                 ]
             };
         }
@@ -1652,41 +1783,44 @@ CRITICAL FORMATTING INSTRUCTIONS:
 3. Write complete sentences with proper grammar
 4. Structure your response with clear sections
 5. Make it conversational and professional
+6. ALWAYS use South African Rand (ZAR/R) when discussing costs
+7. Frame everything in South African/African business context
 CV TEXT (first 8000 characters):
 ${cvText.substring(0, 8000)}
 GIBS PROGRAMS INFORMATION:
 ${JSON.stringify(gibsData.programs, null, 2)}
 RESPONSE STRUCTURE:
 1. Start with a warm, personalized greeting using the person's name if found
-2. Show understanding of their specific background
-3. Highlight key qualifications and experiences
-4. Provide well-structured program recommendations
+2. Show understanding of their specific South African/African background
+3. Highlight key qualifications and experiences in South African context
+4. Provide well-structured program recommendations with South African Rand costs
 5. Use tables or clear formatting for comparison
-6. End with an encouraging note and next steps
+6. End with an encouraging note and next steps relevant to South African applicants
 EXAMPLE RESPONSE STRUCTURE:
 Hey [Name]! Thanks for sharing your CV.
-I've reviewed your background and here's what I'm seeing:
+I've reviewed your background and here's what I'm seeing in the South African context:
 What stands out:
-• Your [degree] in [field] from [university]
-• [X] years of experience in [industry/role]
-• Key projects: [mention specific projects]
-• Technical skills: [list key skills]
-Which GIBS programme fits you best right now?
+• Your [degree] in [field] from [South African university]
+• [X] years of experience in South African [industry/role]
+• Key projects: [mention specific South African projects]
+• Technical skills: [list key skills relevant to South African market]
+Which GIBS programme fits you best in the South African market?
 [Programme 1]
 Why it matches you:
-• Point 1
-• Point 2
-• Point 3
-What you'll gain:
-• Benefit 1
-• Benefit 2
-• Benefit 3
+• Point 1 relevant to South African business
+• Point 2 with South African context
+• Point 3 considering South African economy
+What you'll gain in South Africa:
+• Benefit 1 for South African professionals
+• Benefit 2 for African business leadership
+• Benefit 3 for career advancement in South Africa
+Cost: [Amount in South African Rand]
 [Programme 2 - if applicable]
-Why it could work:
+Why it could work in South African context:
 • Point 1
 • Point 2
-Next steps:
-Based on your background, I'd recommend [specific program]. Would you like me to tell you more about the admission requirements or help you explore other options?`;
+Next steps for South African applicants:
+Based on your background, I'd recommend [specific program]. Would you like me to tell you more about the admission requirements for South African applicants or help you explore other options?`;
             try {
                 const data = await groqApiCall({
                     model: 'openai/gpt-oss-120b',
@@ -1697,7 +1831,7 @@ Based on your background, I'd recommend [specific program]. Would you like me to
                         },
                         {
                             role: 'user',
-                            content: 'Please analyze this CV and provide GIBS program recommendations in a complete, well-structured response.'
+                            content: 'Please analyze this CV and provide GIBS program recommendations in a complete, well-structured response with South African context.'
                         }
                     ],
                     temperature: 0.7,
@@ -1718,7 +1852,7 @@ Based on your background, I'd recommend [specific program]. Would you like me to
                 return responseText;
             } catch (error) {
                 console.error('CV analysis error:', error);
-                return "Thanks for uploading your CV! I can see you have relevant experience. Could you tell me more about your career goals and background so I can suggest the best GIBS programs for you?";
+                return "Thanks for uploading your CV! I can see you have relevant experience in the South African context. Could you tell me more about your career goals and background so I can suggest the best GIBS programs for you in the South African market?";
             }
         }
         function showCVAnalysis(analysis, fileName) {
@@ -1932,13 +2066,19 @@ Based on your background, I'd recommend [specific program]. Would you like me to
             }
             let context = `You are the GIBS AI PathFinder Assistant.
 CRITICAL RESPONSE RULES:
-1. NEVER show internal reasoning or thinking process
-2. Provide ONLY final, conversational responses
-3. Use natural human language with proper spacing and formatting
-4. Write complete sentences with proper grammar
-5. Reference the user's background when relevant
-6. Structure responses with clear paragraphs and bullet points
-7. End responses properly - no truncated sentences
+1. ALWAYS provide context in SOUTH AFRICAN terms:
+   - Use South African Rand (ZAR/R) for all monetary values
+   - Reference South African business environment and economy
+   - Consider South African educational system (NQF levels)
+   - Mention relevance to African business landscape
+   - Frame responses for South African professionals
+2. NEVER show internal reasoning or thinking process
+3. Provide ONLY final, conversational responses
+4. Use natural human language with proper spacing and formatting
+5. Write complete sentences with proper grammar
+6. Reference the user's background when relevant
+7. Structure responses with clear paragraphs and bullet points
+8. End responses properly - no truncated sentences
 BACKGROUND INFORMATION:
 ${backgroundSummary}
 CV ANALYSIS (if available):
@@ -1948,22 +2088,27 @@ ${JSON.stringify(gibsData.programs, null, 2)}
 RECENT CONVERSATION (last 3 messages):
 ${conversationHistory.slice(-3).map(msg => `${msg.role}: ${msg.content}`).join('\n')}
 RESPONSE GUIDELINES:
-1. If user has a degree: Reference it and suggest appropriate programs like "With your degree in [field], you could consider..."
-2. If user has experience: Mention how GIBS programs build on it
-3. Structure complex information with tables or clear sections
-4. Always use proper spacing and formatting
-5. Keep responses complete and well-structured
-6. Use bullet points for lists
-7. Reference African business context when relevant
-8. Ask clarifying questions if more information is needed
-EXAMPLE RESPONSE FORMAT:
-For someone with a computer science degree:
-"With your BSc in Computer Science and your experience in software development, the Advanced Diploma in General Management would be an excellent fit. This program helps technical professionals add business management skills to their existing expertise.
-What you'll gain:
-• Core business knowledge in finance, marketing, and operations
-• Leadership skills for tech teams
-• Understanding of digital transformation in African businesses
-The program requires a degree and 2 years of experience, which you seem to have based on your background. Would you like me to tell you more about the admission process?"`;
+1. If user has a degree: Reference it in South African context, e.g., "With your South African degree in [field]..."
+2. If discussing costs: Always use South African Rand (ZAR/R)
+3. If discussing experience: Frame it in South African/African business context
+4. Reference South African industries and economic sectors
+5. Consider South African labor market trends
+6. Structure complex information with tables or clear sections
+7. Always use proper spacing and formatting
+8. Keep responses complete and well-structured
+9. Use bullet points for lists
+10. Emphasize African business leadership and South African economic context
+11. Ask clarifying questions if more information is needed
+EXAMPLE RESPONSE FORMAT (South African context):
+For someone with a computer science degree from South Africa:
+"With your BSc in Computer Science from a South African university and your experience in the local tech industry, the Advanced Diploma in General Management would be an excellent fit. This program helps technical professionals add business management skills tailored for the South African market.
+
+What you'll gain in the South African context:
+• Core business knowledge in finance, marketing, and operations relevant to South African companies
+• Leadership skills for managing diverse teams in South African workplaces
+• Understanding of digital transformation in African businesses, with specific South African case studies
+
+The program costs R 113,715 (South African Rand) and requires a degree (NQF 7) and 2 years of experience, which you seem to have based on your background. Would you like me to tell you more about the admission process for South African applicants?"`;
             return context;
         }
         async function callAIAPI(userMessage, context, modelType = 'GENERAL') {
